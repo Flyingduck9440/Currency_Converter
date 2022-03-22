@@ -1,17 +1,25 @@
 package com.mafiaz.currencyconverter;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import com.mafiaz.currencyconverter.api.RespondData;
 import com.mafiaz.currencyconverter.databinding.ActivityMainBinding;
+import com.mafiaz.currencyconverter.viewmodel.MainViewModel;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 
     private ActivityMainBinding _binding;
+    private MainViewModel viewModel;
 
     private String[] currency_code;
     private ArrayAdapter currencyAdapter;
@@ -121,7 +129,20 @@ public class MainActivity extends AppCompatActivity{
 
         });
         _binding.numPad.funcEqual.setOnClickListener(view -> {
+            callAPI();
+        });
+    }
 
+    private void callAPI(){
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        viewModel.setBase_cur(_binding.edtFromCurrency.getText().toString());
+        viewModel.setTarget_cur(_binding.edtToCurrency.getText().toString());
+        viewModel.setAmount(Integer.parseInt(_binding.edtAmount.getText().toString()));
+        viewModel.getResult().observe(this, new Observer<Double>() {
+            @Override
+            public void onChanged(Double respondData) {
+                Log.e("Result",""+respondData);
+            }
         });
     }
 }
