@@ -15,6 +15,7 @@ import com.mafiaz.currencyconverter.databinding.ActivityMainBinding;
 import com.mafiaz.currencyconverter.viewmodel.MainViewModel;
 
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -129,7 +130,11 @@ public class MainActivity extends AppCompatActivity{
 
         });
         _binding.numPad.funcEqual.setOnClickListener(view -> {
-            callAPI();
+            if(_binding.edtAmount.getText().toString().equals(".") || _binding.edtAmount.getText().length()==0) {
+                _binding.edtAmount.setError("Error Input");
+            }else if(!_binding.edtAmount.getText().toString().equals("0")){
+                callAPI();
+            }
         });
     }
 
@@ -137,11 +142,11 @@ public class MainActivity extends AppCompatActivity{
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.setBase_cur(_binding.edtFromCurrency.getText().toString());
         viewModel.setTarget_cur(_binding.edtToCurrency.getText().toString());
-        viewModel.setAmount(Integer.parseInt(_binding.edtAmount.getText().toString()));
-        viewModel.getResult().observe(this, new Observer<Double>() {
+        viewModel.setAmount(Double.parseDouble(_binding.edtAmount.getText().toString()));
+        viewModel.getResult().observe(this, new Observer<RespondData>() {
             @Override
-            public void onChanged(Double respondData) {
-                Log.e("Result",""+respondData);
+            public void onChanged(RespondData respondData) {
+                _binding.txtResult.setText(String.format(Locale.getDefault(),"%.4f",respondData.getConversion_result()));
             }
         });
     }

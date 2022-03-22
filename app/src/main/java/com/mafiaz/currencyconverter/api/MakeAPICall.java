@@ -4,8 +4,6 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -13,32 +11,31 @@ import retrofit2.Response;
 public class MakeAPICall {
     protected final String API_KEY = "99328966e77f00777d585d2c";
 
-    private MutableLiveData<Double>  listResult = new MutableLiveData<>();
+    private MutableLiveData<RespondData>  conversionResult = new MutableLiveData<>();
     private ExchangeRateAPI exchangeRateAPI;
 
     public MakeAPICall(){
         exchangeRateAPI = RequestAPI.getRequest();
     }
 
-    public MutableLiveData<Double> getListResult(String base_cur, String target_cur, int amount){
+    public MutableLiveData<RespondData> getConversionResult(String base_cur, String target_cur, double amount){
 
         Call<RespondData> call = exchangeRateAPI.getConvertedData(API_KEY, base_cur,target_cur,amount);
         call.enqueue(new Callback<RespondData>() {
             @Override
             public void onResponse(Call<RespondData> call, Response<RespondData> response) {
-                Log.e("Response",""+response);
                 if(response.isSuccessful()){
-                    listResult.postValue(response.body().getConversion_result());
+                    conversionResult.postValue(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<RespondData> call, Throwable t) {
                 Log.e("Error",""+t.getMessage());
-                listResult.postValue(null);
+                conversionResult.postValue(null);
             }
         });
 
-        return listResult;
+        return conversionResult;
     }
 }

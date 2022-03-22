@@ -11,6 +11,6 @@ public interface ExchangeRateAPI {
             @Path("api_key") String api_key,
             @Path("base_cur") String base_cur,
             @Path("target_cur") String target_cur,
-            @Path("amount") int amount
+            @Path("amount") double amount
     );
 }
