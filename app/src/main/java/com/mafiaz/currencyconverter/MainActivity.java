@@ -147,6 +147,8 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onChanged(RespondData respondData) {
                 _binding.txtResult.setText(String.format(Locale.getDefault(),"%.4f",respondData.getConversion_result()));
+
+                _binding.txtPriceDate.setText(respondData.getTime_last_update_utc().substring(0,25));
             }
         });
     }
