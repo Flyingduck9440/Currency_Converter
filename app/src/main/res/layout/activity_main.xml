@@ -139,7 +139,6 @@
                     android:layout_height="match_parent"
                     android:drawableStart="@drawable/ic_currency"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/button_equal"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:maxLines="1"
@@ -163,7 +162,6 @@
                     android:focusable="false"
                     android:drawableStart="@drawable/ic_currency"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/button_equal"
                     android:maxLines="1"
                     android:inputType="none|textNoSuggestions" />
             </com.google.android.material.textfield.TextInputLayout>
