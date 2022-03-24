@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.mafiaz.currencyconverter.api.RespondData;
 import com.mafiaz.currencyconverter.databinding.ActivityMainBinding;
 import com.mafiaz.currencyconverter.viewmodel.MainViewModel;
 
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
@@ -24,14 +24,18 @@ public class MainActivity extends AppCompatActivity{
 
     private String[] currency_code;
     private ArrayAdapter currencyAdapter;
-    private int fromId = 0;
-    private int toId = 1;
+    private int fromId;
+    private int toId;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
+         preferences = getSharedPreferences("save", MODE_PRIVATE);
+
+        loadLocalSave();
 
         currency_code = getResources().getStringArray(R.array.currency_code);
         currencyAdapter = new ArrayAdapter(this, R.layout.dropdown_items, currency_code);
@@ -64,6 +68,13 @@ public class MainActivity extends AppCompatActivity{
         currencyAdapter = new ArrayAdapter(this, R.layout.dropdown_items, currency_code);
         _binding.edtFromCurrency.setAdapter(currencyAdapter);
         _binding.edtToCurrency.setAdapter(currencyAdapter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        saveLocalData();
     }
 
     @Override
@@ -151,5 +162,21 @@ public class MainActivity extends AppCompatActivity{
                 _binding.txtPriceDate.setText(respondData.getTime_last_update_utc().substring(0,25));
             }
         });
+    }
+
+    private void loadLocalSave() {
+        fromId = preferences.getInt("from_currency", 0);
+        toId = preferences.getInt("to_currency",1);
+        String priceDate;
+        priceDate = preferences.getString("price_date", null);
+        _binding.txtPriceDate.setText(priceDate);
+    }
+
+    private  void saveLocalData(){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("from_currency", fromId);
+        editor.putInt("to_currency", toId);
+        editor.putString("price_date", _binding.txtPriceDate.getText().toString());
+        editor.apply();
     }
 }
