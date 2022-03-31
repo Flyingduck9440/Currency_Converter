@@ -143,8 +143,13 @@ public class MainActivity extends AppCompatActivity{
         _binding.numPad.funcEqual.setOnClickListener(view -> {
             if(_binding.edtAmount.getText().toString().equals(".") || _binding.edtAmount.getText().length()==0) {
                 _binding.edtAmount.setError("Error Input");
-            }else if(!_binding.edtAmount.getText().toString().equals("0")){
+                return;
+            }
+
+            if(!_binding.edtAmount.getText().toString().equals("0")){
                 callAPI();
+            }else{
+                _binding.txtResult.setText("0.00");
             }
         });
     }
