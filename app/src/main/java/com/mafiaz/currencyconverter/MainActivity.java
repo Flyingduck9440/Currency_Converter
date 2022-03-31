@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity{
             if(!_binding.edtAmount.getText().toString().equals("0")){
                 callAPI();
             }else{
-                _binding.txtResult.setText("0");
+                _binding.txtResult.setText("0.00");
             }
         });
     }
